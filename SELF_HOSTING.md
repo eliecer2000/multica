@@ -85,6 +85,8 @@ You also need at least one AI agent CLI installed:
 - [OpenClaw](https://github.com/openclaw/openclaw) (`openclaw` on PATH)
 - [OpenCode](https://github.com/anomalyco/opencode) (`opencode` on PATH)
 - [Hermes](https://github.com/NousResearch/hermes) (`hermes` on PATH)
+- Gemini (`gemini` on PATH)
+- [Pi](https://github.com/paperclipai/paperclip) (`pi` on PATH)
 
 ### b) One-command setup
 
