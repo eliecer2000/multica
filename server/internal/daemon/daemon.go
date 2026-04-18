@@ -903,6 +903,11 @@ func (d *Daemon) runTask(ctx context.Context, task Task, provider string, taskLo
 	// Prepare isolated execution environment.
 	// Repos are passed as metadata only — the agent checks them out on demand
 	// via `multica repo checkout <url>`.
+	var mcpConfigEarly json.RawMessage
+	if task.Agent != nil {
+		mcpConfigEarly = task.Agent.McpConfig
+	}
+
 	taskCtx := execenv.TaskContextForEnv{
 		IssueID:           task.IssueID,
 		TriggerCommentID:  task.TriggerCommentID,
@@ -918,7 +923,7 @@ func (d *Daemon) runTask(ctx context.Context, task Task, provider string, taskLo
 	var env *execenv.Environment
 	codexVersion := d.agentVersion("codex")
 	if task.PriorWorkDir != "" {
-		env = execenv.Reuse(task.PriorWorkDir, provider, codexVersion, taskCtx, d.logger)
+		env = execenv.Reuse(task.PriorWorkDir, provider, codexVersion, taskCtx, mcpConfigEarly, d.logger)
 	}
 	if env == nil {
 		var err error
@@ -930,6 +935,7 @@ func (d *Daemon) runTask(ctx context.Context, task Task, provider string, taskLo
 			Provider:       provider,
 			CodexVersion:   codexVersion,
 			Task:           taskCtx,
+			McpConfig:      mcpConfigEarly,
 		}, d.logger)
 		if err != nil {
 			return TaskResult{}, fmt.Errorf("prepare execution environment: %w", err)
